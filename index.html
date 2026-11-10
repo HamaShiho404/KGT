@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#eff7eb">
+  <meta name="description" content="A short, safety-first movement mini-game for waiting at pedestrian signals in Adelaide.">
+  <title>Adelaide SafeStep Beat</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root { color-scheme: light; }
+    * { -webkit-tap-highlight-color: transparent; }
+    body { margin: 0; min-height: 100svh; background: radial-gradient(ellipse at 50% -15%, #d8eedf 0%, #eff7eb 54%, #e4f0e7 100%); font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .safe-pad { padding-top: max(1.25rem, env(safe-area-inset-top)); padding-bottom: max(1.25rem, env(safe-area-inset-bottom)); }
+    .start-scene, .game-scene, .result-scene { display: flex; width: max-content; max-width: 100%; align-items: flex-end; justify-content: center; gap: 10px; margin-inline: auto; }
+    .start-scene { height: 148px; margin-top: .25rem; }
+    .scene-signal { display: block; width: 64px; height: 118px; object-fit: cover; object-position: top; filter: drop-shadow(0 5px 8px rgb(25 68 43 / .15)); }
+    .game-scene .scene-signal { width: 58px; height: 108px; }
+    .result-scene .scene-signal { width: 60px; height: 112px; }
+    .start-mascot { width: 122px; height: 140px; }
+    .game-scene { height: 124px; margin-top: .5rem; gap: 9px; }
+    .countdown-art { position: relative; display: grid; place-items: center; width: 58px; height: 106px; flex: 0 0 58px; }
+    .countdown-art img { height: 100%; width: 100%; object-fit: cover; object-position: top; filter: drop-shadow(0 5px 8px rgb(25 68 43 / .18)); }
+    .countdown-number { position: absolute; top: 34%; left: 50%; width: 52px; transform: translate(-50%, -50%); text-align: center; }
+    .countdown-number p:first-child { color: #fff9e8; font-size: clamp(1.2rem, 6vw, 1.55rem); font-weight: 900; line-height: 1; text-shadow: 0 2px 8px #831f1d, 0 0 3px #581c1c; }
+    .countdown-number p:last-child { color: #ffedb6; font-size: .48rem; font-weight: 800; letter-spacing: .03em; text-shadow: 0 1px 5px #581c1c; }
+    .result-scene { height: 138px; margin-top: .25rem; }
+    .live-stat { border: 1px solid rgb(120 146 126 / .2); background: rgb(237 245 235 / .8); border-radius: .9rem; padding: .55rem .7rem; }
+    .pulse { animation: pulse 550ms ease-out; }
+    @keyframes pulse { 50% { transform: scale(1.06); background-color: #d5ecd0; } }
+    .mascot-hop { animation: hop 420ms ease-out; }
+    @keyframes hop { 45% { transform: translateY(-20px) rotate(-3deg) scale(1.04); } 75% { transform: translateY(1px); } }
+    .mascot-image { display: block; width: 132px; height: 156px; object-fit: contain; filter: drop-shadow(0 10px 16px rgb(25 68 43 / .18)); }
+    .game-mascot { width: 96px; height: 118px; }
+    .result-mascot { width: 112px; height: 128px; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; } }
+  </style>
+</head>
+<body class="text-[#183f34] antialiased">
+  <main class="safe-pad mx-auto flex min-h-[100svh] w-full max-w-xl flex-col justify-center px-5 py-8 sm:px-8">
+    <header class="mb-7 flex items-center justify-between gap-3" aria-label="Adelaide SafeStep Beat">
+      <div class="flex min-w-0 items-center gap-3">
+        <span class="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-[#78927e]/25 bg-[#edf5eb] text-xl" aria-hidden="true">🚦</span>
+        <span class="whitespace-nowrap text-[9px] font-bold tracking-[.1em] text-[#32734f] sm:text-sm sm:tracking-[.16em]">ADELAIDE <span class="text-[#385b4c]/55">/</span> SAFESTEP BEAT</span>
+      </div>
+      <button id="language-toggle" class="min-h-10 shrink-0 rounded-xl border border-[#78927e]/30 bg-[#fbfff7]/85 px-3 py-2 text-xs font-extrabold text-[#32734f] shadow-sm transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#648573]/30" type="button" aria-label="Switch language">English</button>
+    </header>
+
+    <section id="start-screen" class="rounded-[2rem] border border-[#78927e]/25 bg-[#fbfff7]/92 p-6 shadow-2xl backdrop-blur sm:p-9">
+      <p data-i18n="startKicker" class="mb-3 text-center text-xs font-bold uppercase tracking-[.22em] text-[#47835d]">A little movement while you wait</p>
+      <h1 class="text-center text-4xl font-black leading-tight tracking-tight sm:text-5xl">Adelaide<br><span class="text-[#47835d]">SafeStep Beat</span></h1>
+      <div class="start-scene" data-aria-i18n="waitingSceneLabel" aria-label="Kangaroo waiting at a pedestrian signal">
+        <img class="scene-signal" src="assets/countdown-signal.png" data-signal="waiting" alt="Pedestrian signal with red on and green off">
+        <img class="mascot-image start-mascot" data-mascot src="assets/kangaroo.png" alt="A friendly orange kangaroo wearing a green scarf">
+      </div>
+      <p data-i18n="startDescription" class="mx-auto mt-5 max-w-sm text-center leading-7 text-[#385b4c]/85">Tap start, then do a small jump or step in place. Your kangaroo hops with you!</p>
+      <div class="mt-7 rounded-2xl border border-[#d6ad62]/45 bg-[#fff3d5] p-4 text-center">
+        <p data-i18n="safetyTitle" class="font-extrabold text-[#805a18]">⚠ Keep your eyes on your surroundings.</p>
+        <p data-i18n="safetyText" class="mt-1 text-sm leading-6 text-[#385b4c]/85">Hold your phone securely. Stay on the footpath, watch traffic, and stop playing whenever you need to pay attention. Never step into the road to play.</p>
+      </div>
+      <button id="start-button" data-i18n="startButton" class="mt-7 min-h-14 w-full rounded-2xl bg-[#91c99b] px-6 py-4 text-base font-black tracking-[.12em] text-[#183f34] shadow-lg shadow-emerald-950/30 transition hover:bg-[#a7d7a9] focus:outline-none focus:ring-4 focus:ring-[#91c99b]/45 active:scale-[.99]">START GAME</button>
+      <p id="motion-note" data-i18n="motionInitial" class="mt-3 min-h-5 text-center text-xs leading-5 text-[#385b4c]/65" aria-live="polite">Motion counting works on supported devices. You can still play with the demo button.</p>
+    </section>
+
+    <section id="game-screen" class="hidden rounded-[2rem] border border-[#78927e]/25 bg-[#fbfff7]/92 p-6 text-center shadow-2xl backdrop-blur sm:p-9" aria-live="off">
+      <p data-i18n="gameKicker" class="text-xs font-bold uppercase tracking-[.22em] text-[#47835d]">Keep aware. Keep moving gently.</p>
+      <div class="game-scene" data-aria-i18n="gameSceneLabel" aria-label="Kangaroo waiting beside the countdown signal">
+        <div id="countdown-art" class="countdown-art" aria-label="Countdown on the pedestrian signal">
+          <img src="assets/countdown-signal.png" alt="">
+          <div class="countdown-number" aria-live="off"><p id="timer" class="tabular-nums">15</p><p id="countdown-unit">seconds</p></div>
+        </div>
+        <img class="mascot-image game-mascot" data-mascot src="assets/kangaroo.png" alt="Your kangaroo buddy is keeping you company">
+      </div>
+      <div id="score-card" class="mx-auto mt-7 max-w-xs rounded-2xl border border-[#78927e]/25 bg-[#edf5eb] px-5 py-4 transition">
+        <p data-i18n="scoreLabel" class="text-sm font-semibold text-[#385b4c]/75">Steps / Shakes</p>
+        <p id="score" class="mt-1 text-5xl font-black tabular-nums">0</p>
+      </div>
+      <button id="manual-step-button" data-i18n="tempTapButton" class="mx-auto mt-3 min-h-11 w-full max-w-xs rounded-xl border border-dashed border-[#648573]/45 bg-white/55 px-4 py-2 text-sm font-bold text-[#32734f] transition hover:bg-[#edf5eb] focus:outline-none focus:ring-2 focus:ring-[#648573]/30" type="button">TEMP: Tap to count a step</button>
+      <div class="mx-auto mt-3 grid max-w-xs grid-cols-2 gap-2">
+        <div class="live-stat"><span data-i18n="elapsedLabel" class="text-xs text-[#385b4c]/70">Elapsed</span><p id="elapsed-time" class="mt-0.5 font-bold tabular-nums">00:00</p></div>
+        <div class="live-stat"><span data-i18n="liveRateLabel" class="text-xs text-[#385b4c]/70">Current pace</span><p class="mt-0.5 font-bold tabular-nums"><span id="live-rate">0</span> <span data-i18n="perMinute">steps/min</span></p></div>
+      </div>
+      <p id="game-hint" data-i18n="gameHintInitial" class="mt-4 text-sm text-[#385b4c]/75">Jump or step gently in place. Keep looking up.</p>
+      <button id="stop-button" data-i18n="stopButton" class="mt-7 min-h-11 w-full rounded-2xl px-5 py-3 text-sm font-semibold text-[#385b4c]/65 underline decoration-[#648573]/35 underline-offset-4 hover:text-[#183f34] focus:outline-none focus:ring-2 focus:ring-[#648573]/25">Stop game</button>
+    </section>
+
+    <section id="result-screen" class="hidden rounded-[2rem] border border-emerald-200/20 bg-[#fbfff7]/94 p-6 text-center shadow-2xl backdrop-blur sm:p-9" aria-live="polite">
+      <div class="result-scene" data-aria-i18n="resultSceneLabel" aria-label="Kangaroo beside a green pedestrian signal">
+        <img class="scene-signal" src="assets/countdown-signal-green.png" data-signal="finished" alt="Pedestrian signal with green on and red off">
+        <img class="mascot-image result-mascot" data-mascot src="assets/kangaroo.png" alt="Your kangaroo buddy celebrates with you">
+      </div>
+      <p data-i18n="resultKicker" class="mt-6 text-xs font-bold uppercase tracking-[.22em] text-[#47835d]">Your wait is over</p>
+      <h2 data-i18n="resultTitle" class="mt-2 text-3xl font-black leading-tight text-[#32734f]">SIGNAL IS GREEN!<br>WALK SAFELY!</h2>
+      <p data-i18n="resultDescription" class="mt-3 text-sm text-[#385b4c]/80">Put your phone away and check traffic before crossing.</p>
+      <p id="end-reason" class="mt-3 text-sm text-[#385b4c]/75"></p>
+      <div class="mt-7 grid grid-cols-2 gap-3">
+        <div class="rounded-2xl border border-[#78927e]/25 bg-[#edf5eb] p-4"><p data-i18n="yourScore" class="text-xs font-semibold text-[#385b4c]/70">STEPS</p><p id="final-score" class="mt-1 text-4xl font-black tabular-nums">0</p></div>
+        <div class="rounded-2xl border border-[#78927e]/25 bg-[#edf5eb] p-4"><p data-i18n="gameTime" class="text-xs font-semibold text-[#385b4c]/70">TIME</p><p id="final-time" class="mt-1 text-3xl font-black tabular-nums">00:00</p></div>
+        <div class="rounded-2xl border border-[#78927e]/25 bg-[#edf5eb] p-4"><p data-i18n="rateLabel" class="text-xs font-semibold text-[#385b4c]/70">STEPS / MIN</p><p id="final-rate" class="mt-1 text-4xl font-black tabular-nums">0</p></div>
+        <div class="rounded-2xl border border-[#78927e]/25 bg-[#edf5eb] p-4"><p data-i18n="bestRateLabel" class="text-xs font-semibold text-[#385b4c]/70">BEST RATE</p><p id="high-rate" class="mt-1 text-4xl font-black tabular-nums">0</p></div>
+      </div>
+      <p id="record-status" data-i18n="newRecord" class="mt-4 hidden font-extrabold text-[#32734f]" aria-live="polite"></p>
+      <button id="again-button" data-i18n="againButton" class="mt-7 min-h-14 w-full rounded-2xl bg-[#91c99b] px-6 py-4 text-base font-black tracking-[.12em] text-[#183f34] shadow-lg shadow-emerald-950/30 transition hover:bg-[#a7d7a9] focus:outline-none focus:ring-4 focus:ring-[#91c99b]/45">PLAY AGAIN</button>
+      <p data-i18n="highScoreNote" class="mt-4 text-xs text-[#385b4c]/55">Your high score is saved on this device only.</p>
+    </section>
+    <footer data-i18n="footer" class="mt-6 text-center text-[11px] leading-5 text-[#385b4c]/50">A demo mini-game. It does not detect real traffic signals.<br>Always follow pedestrian signals and local road rules.</footer>
+  </main>
+
+  <script>
+    (() => {
+      const translations = {
+        ja: {
+          switchLanguage: 'English', switchLabel: '言語を英語に切り替え', countdownLabel: '歩行者信号に重ねたカウントダウン',
+          waitingSignalAlt: '赤信号点灯、青信号消灯の歩行者用信号', waitingSceneLabel: '歩行者信号の前で待つカンガルー', gameSceneLabel: 'カウントダウン信号の横で待つカンガルー', resultSceneLabel: '青信号の横にいるカンガルー',
+          startKicker: '待ち時間に、ちょっと運動',
+          startDescription: 'スタートしたら、その場で小さくジャンプ／ステップ。カンガルーも一緒に跳ねるよ！',
+          safetyTitle: '⚠ 周囲から目を離さないでください。',
+          safetyText: 'スマホをしっかり持ち、歩道にとどまってください。車に注意し、周囲に気を配る必要があればすぐに中断を。道路上では遊ばないでください。',
+          startButton: 'ゲーム開始', motionInitial: '対応端末では動きを検知します。タップ用の仮ボタンも使えます。',
+          motionChecking: 'モーションの使用許可を確認しています…',
+          motionActive: '動きを計測できます。周囲を見ながら遊んでください。',
+          motionUnavailable: 'モーションを検知できません。仮ボタンで歩数を加算できます。',
+          gameKicker: '周囲に気を配って、やさしく動こう', unit: '秒', scoreLabel: '足踏み',
+          gameHintInitial: 'その場で小さくジャンプ／ステップ。顔を上げて周囲を見てね。',
+          gameHintActive: '動きを感じるとカンガルーが跳ねます。周囲から目を離さないで。',
+          gameHintUnavailable: 'モーション計測は利用できません。デモボタンで終了できます。',
+          elapsedLabel: '経過時間', liveRateLabel: '現在のペース', perMinute: '歩／分', gameTime: 'プレイ時間', rateLabel: '1分あたりの歩数', bestRateLabel: '最高記録（歩／分）', newRecord: '新記録！', tempTapButton: '【仮】タップで歩数を加算',
+          stopButton: 'ゲームを終了', endedByTimer: '15秒のプレイ時間が終了しました。', endedManually: 'ゲームを終了しました。',
+          resultKicker: 'プレイ結果', resultTitle: 'ゲーム終了！<br>信号と周囲を確認してから渡りましょう。',
+          resultDescription: '表示はデモです。スマホをしまい、実際の信号と左右の安全を確かめてから渡ってください。', resultSignalAlt: '赤信号は消灯し、青信号だけが点灯した歩行者信号',
+          yourScore: '歩数', highScore: 'ハイスコア', againButton: 'もう一度プレイ',
+          highScoreNote: 'プレイ結果と最高ペースは、この端末にのみ保存されます。',
+          footer: 'デモ用ミニゲームです。実際の信号は検知しません。<br>歩行者信号と現地の交通ルールに従ってください。',
+          mascotAlt: '緑のスカーフを巻いた、親しみやすいカンガルー'
+        },
+        en: {
+          switchLanguage: '日本語', switchLabel: 'Switch language to Japanese', countdownLabel: 'Countdown displayed on the pedestrian signal',
+          waitingSignalAlt: 'Pedestrian signal with red on and green off', waitingSceneLabel: 'Kangaroo waiting at a pedestrian signal', gameSceneLabel: 'Kangaroo beside the countdown signal', resultSceneLabel: 'Kangaroo beside the green pedestrian signal',
+          startKicker: 'A little movement while you wait',
+          startDescription: 'Tap start, then do a small jump or step in place. Your kangaroo hops with you!',
+          safetyTitle: '⚠ Keep your eyes on your surroundings.',
+          safetyText: 'Hold your phone securely and stay on the footpath. Watch traffic and stop playing whenever you need to pay attention. Never play in the road.',
+          startButton: 'START GAME', motionInitial: 'Motion counting works on supported devices. You can also use the temporary tap button.',
+          motionChecking: 'Checking motion access…',
+          motionActive: 'Motion counting is on. Keep looking up and stay aware.',
+          motionUnavailable: 'Motion counting is unavailable. Use the temporary button to add steps.',
+          gameKicker: 'Keep aware. Keep moving gently.', unit: 'seconds', scoreLabel: 'Steps',
+          gameHintInitial: 'Jump or step gently in place. Keep looking up.',
+          gameHintActive: 'Your kangaroo hops when it senses your movement. Keep looking up.',
+          gameHintUnavailable: 'Motion counting is unavailable. Use the demo button to finish.',
+          elapsedLabel: 'Elapsed time', liveRateLabel: 'Current pace', perMinute: 'steps/min', gameTime: 'GAME TIME', rateLabel: 'STEPS PER MINUTE', bestRateLabel: 'BEST RATE (STEPS/MIN)', newRecord: 'NEW RECORD!', tempTapButton: 'TEMP: Tap to count a step',
+          stopButton: 'Stop game', endedByTimer: 'Your 15-second game is complete.', endedManually: 'Game ended.',
+          resultKicker: 'Game results', resultTitle: 'GAME OVER<br>CHECK THE SIGNAL BEFORE CROSSING',
+          resultDescription: 'This light graphic is a demo. Put your phone away and check the real signal and traffic before crossing.', resultSignalAlt: 'Pedestrian signal with green on and red off',
+          yourScore: 'STEPS', highScore: 'HIGH SCORE', againButton: 'PLAY AGAIN',
+          highScoreNote: 'Results and your best pace are saved on this device only.',
+          footer: 'A demo mini-game. It does not detect real traffic signals.<br>Always follow pedestrian signals and local road rules.',
+          mascotAlt: 'A friendly orange kangaroo wearing a green scarf'
+        }
+      };
+      let language = 'ja';
+      let motionStatus = 'initial';
+      try {
+        const savedLanguage = localStorage.getItem('safestep_language');
+        if (savedLanguage === 'en' || savedLanguage === 'ja') language = savedLanguage;
+      } catch (_) { /* Language switching remains available without storage. */ }
+
+      const DURATION = 15;
+      const LINEAR_ACCELERATION_THRESHOLD = 4.5;
+      const GRAVITY_INCLUDED_THRESHOLD = 14;
+      const COOLDOWN_MS = 320;
+      const screens = ['start-screen', 'game-screen', 'result-screen'].map(id => document.getElementById(id));
+      const startButton = document.getElementById('start-button');
+      const scoreNode = document.getElementById('score');
+      const timerNode = document.getElementById('timer');
+      const scoreCard = document.getElementById('score-card');
+      let score = 0;
+      let seconds = DURATION;
+      let timerId = null;
+      let lastMotionAt = 0;
+      let listening = false;
+      let gameActive = false;
+      let gameStartedAt = 0;
+      let gameEndReason = '';
+
+      function updateDynamicText() {
+        document.getElementById('motion-note').textContent = translations[language][`motion${motionStatus[0].toUpperCase()}${motionStatus.slice(1)}`];
+        const hintKey = motionStatus === 'active' ? 'gameHintActive' : motionStatus === 'unavailable' ? 'gameHintUnavailable' : 'gameHintInitial';
+        document.getElementById('game-hint').textContent = translations[language][hintKey];
+        document.getElementById('countdown-unit').textContent = translations[language].unit;
+        if (gameEndReason) document.getElementById('end-reason').textContent = translations[language][gameEndReason];
+      }
+      function setLanguage(nextLanguage) {
+        language = nextLanguage;
+        document.documentElement.lang = language;
+        try { localStorage.setItem('safestep_language', language); } catch (_) { /* Preference is optional. */ }
+        document.querySelectorAll('[data-i18n]').forEach(node => {
+          node.innerHTML = translations[language][node.dataset.i18n];
+        });
+        document.querySelectorAll('[data-mascot]').forEach(img => { img.alt = translations[language].mascotAlt; });
+        document.querySelectorAll('[data-signal]').forEach(img => {
+          img.alt = translations[language][img.dataset.signal === 'waiting' ? 'waitingSignalAlt' : 'resultSignalAlt'];
+        });
+        document.querySelectorAll('[data-aria-i18n]').forEach(node => {
+          node.setAttribute('aria-label', translations[language][node.dataset.ariaI18n]);
+        });
+        const toggle = document.getElementById('language-toggle');
+        toggle.textContent = translations[language].switchLanguage;
+        toggle.setAttribute('aria-label', translations[language].switchLabel);
+        document.getElementById('countdown-art').setAttribute('aria-label', translations[language].countdownLabel);
+        updateDynamicText();
+      }
+
+      function showScreen(target) {
+        screens.forEach(screen => screen.classList.toggle('hidden', screen.id !== target));
+      }
+      function stopMotion() {
+        if (listening) window.removeEventListener('devicemotion', onMotion);
+        listening = false;
+      }
+      function onMotion(event) {
+        const linear = event.acceleration;
+        const hasLinear = linear && Number.isFinite(linear.x) && Number.isFinite(linear.y) && Number.isFinite(linear.z);
+        const a = hasLinear ? linear : event.accelerationIncludingGravity;
+        if (!a || !Number.isFinite(a.x) || !Number.isFinite(a.y) || !Number.isFinite(a.z)) return;
+        const magnitude = Math.sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
+        const now = performance.now();
+        const threshold = hasLinear ? LINEAR_ACCELERATION_THRESHOLD : GRAVITY_INCLUDED_THRESHOLD;
+        if (magnitude > threshold && now - lastMotionAt >= COOLDOWN_MS) {
+          lastMotionAt = now;
+          addPoint();
+        }
+      }
+      function addPoint() {
+        if (!gameActive) return;
+        score += 1;
+        scoreNode.textContent = String(score);
+        document.querySelectorAll('[data-mascot]').forEach(img => {
+          img.classList.remove('mascot-hop');
+          void img.offsetWidth;
+          img.classList.add('mascot-hop');
+        });
+        scoreCard.classList.remove('pulse');
+        void scoreCard.offsetWidth;
+        scoreCard.classList.add('pulse');
+        updateLiveMetrics(performance.now());
+      }
+      async function requestMotionPermission() {
+        const MotionEvent = window.DeviceMotionEvent;
+        if (!MotionEvent) return 'unsupported';
+        if (typeof MotionEvent.requestPermission === 'function') {
+          try {
+            const result = await MotionEvent.requestPermission();
+            return result === 'granted' ? 'granted' : 'denied';
+          } catch (_) { return 'denied'; }
+        }
+        return 'granted';
+      }
+      function formatDuration(milliseconds) {
+        const totalSeconds = Math.floor(milliseconds / 1000);
+        return `${String(Math.floor(totalSeconds / 60)).padStart(2, '0')}:${String(totalSeconds % 60).padStart(2, '0')}`;
+      }
+      function updateLiveMetrics(now = performance.now()) {
+        const elapsedMs = Math.max(0, now - gameStartedAt);
+        document.getElementById('elapsed-time').textContent = formatDuration(elapsedMs);
+        document.getElementById('live-rate').textContent = String(elapsedMs > 0 ? Math.round(score * 60000 / elapsedMs) : 0);
+      }
+      async function startGame() {
+        startButton.disabled = true;
+        motionStatus = 'checking';
+        updateDynamicText();
+        const permission = await requestMotionPermission();
+        motionStatus = permission === 'granted' ? 'active' : 'unavailable';
+        updateDynamicText();
+        score = 0;
+        seconds = DURATION;
+        lastMotionAt = 0;
+        gameEndReason = '';
+        scoreNode.textContent = '0';
+        timerNode.textContent = String(seconds);
+        document.getElementById('elapsed-time').textContent = '00:00';
+        document.getElementById('live-rate').textContent = '0';
+        if (permission === 'granted') {
+          window.addEventListener('devicemotion', onMotion);
+          listening = true;
+        }
+        showScreen('game-screen');
+        gameStartedAt = performance.now();
+        gameActive = true;
+        updateLiveMetrics(gameStartedAt);
+        timerId = window.setInterval(updateGameClock, 100);
+      }
+      function updateGameClock() {
+        if (!gameActive) return;
+        const now = performance.now();
+        const elapsed = now - gameStartedAt;
+        seconds = Math.max(0, Math.ceil((DURATION * 1000 - elapsed) / 1000));
+        timerNode.textContent = String(seconds);
+        updateLiveMetrics(now);
+        if (elapsed >= DURATION * 1000) finishGame('timer');
+      }
+      function finishGame(reason = 'manual') {
+        if (!gameActive) return;
+        gameActive = false;
+        if (timerId !== null) window.clearInterval(timerId);
+        timerId = null;
+        stopMotion();
+        const elapsedMs = Math.max(1, performance.now() - gameStartedAt);
+        const stepsPerMinute = Math.round(score * 60000 / elapsedMs);
+        const currentResult = { steps: score, elapsedMs: Math.round(elapsedMs), stepsPerMinute, endedBy: reason, recordedAt: new Date().toISOString() };
+        let bestRate = 0;
+        let newRecord = false;
+        try {
+          const previous = JSON.parse(localStorage.getItem('safestep_records') || '{}') || {};
+          const previousBest = Number(previous.bestPerMinute) || 0;
+          bestRate = Math.max(previousBest, stepsPerMinute);
+          newRecord = score > 0 && stepsPerMinute > previousBest;
+          const history = Array.isArray(previous.history) ? previous.history : [];
+          const records = {
+            bestPerMinute: bestRate,
+            best: newRecord ? currentResult : (previous.best || null),
+            history: [...history, currentResult].slice(-50)
+          };
+          localStorage.setItem('safestep_records', JSON.stringify(records));
+          const oldStepHigh = Number.parseInt(localStorage.getItem('safestep_highscore') || '0', 10) || 0;
+          if (score > oldStepHigh) localStorage.setItem('safestep_highscore', String(score));
+        } catch (_) {
+          bestRate = stepsPerMinute;
+          newRecord = score > 0;
+        }
+        document.getElementById('final-score').textContent = String(score);
+        document.getElementById('final-time').textContent = formatDuration(elapsedMs);
+        document.getElementById('final-rate').textContent = String(stepsPerMinute);
+        document.getElementById('high-rate').textContent = String(bestRate);
+        gameEndReason = reason === 'timer' ? 'endedByTimer' : 'endedManually';
+        document.getElementById('record-status').classList.toggle('hidden', !newRecord);
+        updateDynamicText();
+        showScreen('result-screen');
+      }
+      startButton.addEventListener('click', startGame);
+      document.getElementById('manual-step-button').addEventListener('click', addPoint);
+      document.getElementById('stop-button').addEventListener('click', () => finishGame('manual'));
+      document.getElementById('again-button').addEventListener('click', () => {
+        showScreen('start-screen');
+        startButton.disabled = false;
+        motionStatus = 'initial';
+        gameEndReason = '';
+        document.getElementById('record-status').classList.add('hidden');
+        updateDynamicText();
+        startButton.focus();
+      });
+      document.getElementById('language-toggle').addEventListener('click', () => setLanguage(language === 'ja' ? 'en' : 'ja'));
+      setLanguage(language);
+    })();
+  </script>
+</body>
+</html>
