@@ -58,8 +58,22 @@
         <p data-i18n="safetyTitle" class="font-extrabold text-[#805a18]">⚠ Keep your eyes on your surroundings.</p>
         <p data-i18n="safetyText" class="mt-1 text-sm leading-6 text-[#385b4c]/85">Hold your phone securely. Stay on the footpath, watch traffic, and stop playing whenever you need to pay attention. Never step into the road to play.</p>
       </div>
+      <label for="player-name" data-i18n="playerNameLabel" class="mt-5 block text-left text-xs font-bold text-[#385b4c]/75">プレイヤー名</label>
+      <input id="player-name" maxlength="20" autocomplete="nickname" class="mt-1 min-h-11 w-full rounded-xl border border-[#78927e]/30 bg-white/80 px-3 py-2 text-sm text-[#183f34] focus:outline-none focus:ring-2 focus:ring-[#648573]/30" value="プレイヤー">
       <button id="start-button" data-i18n="startButton" class="mt-7 min-h-14 w-full rounded-2xl bg-[#91c99b] px-6 py-4 text-base font-black tracking-[.12em] text-[#183f34] shadow-lg shadow-emerald-950/30 transition hover:bg-[#a7d7a9] focus:outline-none focus:ring-4 focus:ring-[#91c99b]/45 active:scale-[.99]">START GAME</button>
       <p id="motion-note" data-i18n="motionInitial" class="mt-3 min-h-5 text-center text-xs leading-5 text-[#385b4c]/65" aria-live="polite">Motion counting works on supported devices. You can still play with the demo button.</p>
+      <p id="sound-note" data-i18n="soundInitial" class="mt-1 min-h-5 text-center text-xs leading-5 text-[#385b4c]/65" aria-live="polite">Green-signal sound detection needs microphone access.</p>
+      <section class="mt-6 rounded-2xl border border-[#78927e]/25 bg-[#edf5eb]/70 p-4 text-left" aria-labelledby="daily-board-title">
+        <h2 id="daily-board-title" data-i18n="dailyBoardTitle" class="text-sm font-extrabold text-[#32734f]">今日のフレンド記録</h2>
+        <p id="daily-board-start-empty" data-i18n="dailyBoardEmpty" class="mt-2 text-xs leading-5 text-[#385b4c]/65">共有コードを読み込むと、友達の今日の記録がここに追加されます。</p>
+        <ol id="daily-board-start-list" class="mt-2 space-y-1 text-sm"></ol>
+        <p data-i18n="dailyBoardHint" class="mt-2 text-[11px] leading-4 text-[#385b4c]/55">記録は共有リンクで友達と交換します。</p>
+      </section>
+      <div class="mt-3 flex gap-2">
+        <input id="friend-code-input" class="min-h-10 min-w-0 flex-1 rounded-xl border border-[#78927e]/25 bg-white/80 px-3 py-2 text-xs" data-placeholder-i18n="friendCodePlaceholder" placeholder="友達の共有コードを貼り付け">
+        <button id="import-friend-code" data-i18n="importFriendCode" class="min-h-10 rounded-xl bg-[#d9eddb] px-3 py-2 text-xs font-bold text-[#32734f]" type="button">読み込む</button>
+      </div>
+      <p id="friend-import-status" class="mt-1 text-left text-[11px] text-[#385b4c]/65" aria-live="polite"></p>
     </section>
 
     <section id="game-screen" class="hidden rounded-[2rem] border border-[#78927e]/25 bg-[#fbfff7]/92 p-6 text-center shadow-2xl backdrop-blur sm:p-9" aria-live="off">
@@ -100,6 +114,14 @@
         <div class="rounded-2xl border border-[#78927e]/25 bg-[#edf5eb] p-4"><p data-i18n="bestRateLabel" class="text-xs font-semibold text-[#385b4c]/70">BEST RATE</p><p id="high-rate" class="mt-1 text-4xl font-black tabular-nums">0</p></div>
       </div>
       <p id="record-status" data-i18n="newRecord" class="mt-4 hidden font-extrabold text-[#32734f]" aria-live="polite"></p>
+      <section class="mt-6 rounded-2xl border border-[#78927e]/25 bg-[#edf5eb]/70 p-4 text-left" aria-labelledby="daily-board-result-title">
+        <h3 id="daily-board-result-title" data-i18n="dailyBoardTitle" class="text-sm font-extrabold text-[#32734f]">今日のフレンド記録</h3>
+        <p id="daily-board-result-empty" data-i18n="dailyBoardEmpty" class="mt-2 text-xs leading-5 text-[#385b4c]/65">共有コードを読み込むと、友達の今日の記録がここに追加されます。</p>
+        <ol id="daily-board-result-list" class="mt-2 space-y-1 text-sm"></ol>
+        <button id="share-results-button" data-i18n="shareResults" class="mt-3 min-h-10 w-full rounded-xl border border-[#648573]/35 bg-white/75 px-3 py-2 text-xs font-bold text-[#32734f] hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#648573]/30" type="button">今日の記録を共有</button>
+        <textarea id="share-results-url" rows="3" class="mt-2 hidden w-full rounded-lg border border-[#78927e]/25 bg-white px-2 py-2 text-xs text-[#385b4c]" readonly aria-label="Share code"></textarea>
+        <p id="share-results-status" class="mt-1 text-xs text-[#385b4c]/65" aria-live="polite"></p>
+      </section>
       <button id="again-button" data-i18n="againButton" class="mt-7 min-h-14 w-full rounded-2xl bg-[#91c99b] px-6 py-4 text-base font-black tracking-[.12em] text-[#183f34] shadow-lg shadow-emerald-950/30 transition hover:bg-[#a7d7a9] focus:outline-none focus:ring-4 focus:ring-[#91c99b]/45">PLAY AGAIN</button>
       <p data-i18n="highScoreNote" class="mt-4 text-xs text-[#385b4c]/55">Your high score is saved on this device only.</p>
     </section>
@@ -120,16 +142,23 @@
           motionChecking: 'モーションの使用許可を確認しています…',
           motionActive: '動きを計測できます。周囲を見ながら遊んでください。',
           motionUnavailable: 'モーションを検知できません。仮ボタンで歩数を加算できます。',
+          soundInitial: '青信号の音を検知して終了します（マイク許可が必要です）。', soundChecking: '信号音の検知に必要なマイク許可を確認しています…',
+          soundActive: '信号音を待機中です。音声は端末内で検知し、録音・送信しません。', soundUnavailable: 'マイクを使えないため音検知は無効です。タイマーか終了ボタンを使えます。',
+          playerNameLabel: 'プレイヤー名（共有用）', youLabel: 'あなた',
+          dailyBoardTitle: '今日のフレンド記録', dailyBoardEmpty: '共有リンクを開くと、友達の今日の記録がここに追加されます。',
+          dailyBoardHint: '同じ日に遊んだ友達と共有コードを交換すると、記録が表示されます。',
+          friendCodePlaceholder: '友達の共有コードを貼り付け', importFriendCode: '読み込む', importCodeSuccess: '友達の今日の記録を読み込みました。', importCodeInvalid: '共有コードを読み込めませんでした。',
+          shareResults: '今日の記録を共有コードで送る', shareLinkCopied: '共有コードをコピーしました。友達に送ってください。', shareLinkManual: '下の共有コードをコピーして友達に送ってください。',
           gameKicker: '周囲に気を配って、やさしく動こう', unit: '秒', scoreLabel: '足踏み',
           gameHintInitial: 'その場で小さくジャンプ／ステップ。顔を上げて周囲を見てね。',
           gameHintActive: '動きを感じるとカンガルーが跳ねます。周囲から目を離さないで。',
           gameHintUnavailable: 'モーション計測は利用できません。デモボタンで終了できます。',
           elapsedLabel: '経過時間', liveRateLabel: '現在のペース', perMinute: '歩／分', gameTime: 'プレイ時間', rateLabel: '1分あたりの歩数', bestRateLabel: '最高記録（歩／分）', newRecord: '新記録！', tempTapButton: '【仮】タップで歩数を加算',
-          stopButton: 'ゲームを終了', endedByTimer: '15秒のプレイ時間が終了しました。', endedManually: 'ゲームを終了しました。',
+          stopButton: 'ゲームを終了', endedByGreen: '青信号になったためゲームを終了しました。', endedBySound: '信号音を検知したためゲームを終了しました。', endedManually: 'ゲームを終了しました。',
           resultKicker: 'プレイ結果', resultTitle: 'ゲーム終了！<br>信号と周囲を確認してから渡りましょう。',
           resultDescription: '表示はデモです。スマホをしまい、実際の信号と左右の安全を確かめてから渡ってください。', resultSignalAlt: '赤信号は消灯し、青信号だけが点灯した歩行者信号',
           yourScore: '歩数', highScore: 'ハイスコア', againButton: 'もう一度プレイ',
-          highScoreNote: 'プレイ結果と最高ペースは、この端末にのみ保存されます。',
+          highScoreNote: '自分の記録はこの端末に保存されます。友達の記録は共有リンクから読み込みます。',
           footer: 'デモ用ミニゲームです。実際の信号は検知しません。<br>歩行者信号と現地の交通ルールに従ってください。',
           mascotAlt: '緑のスカーフを巻いた、親しみやすいカンガルー'
         },
@@ -144,28 +173,37 @@
           motionChecking: 'Checking motion access…',
           motionActive: 'Motion counting is on. Keep looking up and stay aware.',
           motionUnavailable: 'Motion counting is unavailable. Use the temporary button to add steps.',
+          soundInitial: 'The game can end when it detects the green-signal sound (microphone access required).', soundChecking: 'Checking microphone access for signal-sound detection…',
+          soundActive: 'Listening for the signal sound. Audio is analyzed on this device and is not recorded or sent.', soundUnavailable: 'Microphone unavailable; use the timer or Stop button to end the game.',
+          playerNameLabel: 'Player name (shown when shared)', youLabel: 'You',
+          dailyBoardTitle: "Today's friends' results", dailyBoardEmpty: 'Open a friend’s share link to add their result for today.',
+          dailyBoardHint: 'Exchange share codes with friends who played today to see their results.',
+          friendCodePlaceholder: "Paste a friend's share code", importFriendCode: 'Import', importCodeSuccess: "Friend's result for today was imported.", importCodeInvalid: 'Could not read that share code.',
+          shareResults: "Share today's results as a code", shareLinkCopied: 'Share code copied. Send it to your friends.', shareLinkManual: 'Copy the share code below and send it to your friends.',
           gameKicker: 'Keep aware. Keep moving gently.', unit: 'seconds', scoreLabel: 'Steps',
           gameHintInitial: 'Jump or step gently in place. Keep looking up.',
           gameHintActive: 'Your kangaroo hops when it senses your movement. Keep looking up.',
           gameHintUnavailable: 'Motion counting is unavailable. Use the demo button to finish.',
           elapsedLabel: 'Elapsed time', liveRateLabel: 'Current pace', perMinute: 'steps/min', gameTime: 'GAME TIME', rateLabel: 'STEPS PER MINUTE', bestRateLabel: 'BEST RATE (STEPS/MIN)', newRecord: 'NEW RECORD!', tempTapButton: 'TEMP: Tap to count a step',
-          stopButton: 'Stop game', endedByTimer: 'Your 15-second game is complete.', endedManually: 'Game ended.',
+          stopButton: 'Stop game', endedByGreen: 'The game ended when the signal turned green.', endedBySound: 'The game ended after detecting a signal sound.', endedManually: 'Game ended.',
           resultKicker: 'Game results', resultTitle: 'GAME OVER<br>CHECK THE SIGNAL BEFORE CROSSING',
           resultDescription: 'This light graphic is a demo. Put your phone away and check the real signal and traffic before crossing.', resultSignalAlt: 'Pedestrian signal with green on and red off',
           yourScore: 'STEPS', highScore: 'HIGH SCORE', againButton: 'PLAY AGAIN',
-          highScoreNote: 'Results and your best pace are saved on this device only.',
+          highScoreNote: 'Your own results are saved on this device. Friend results arrive through share links.',
           footer: 'A demo mini-game. It does not detect real traffic signals.<br>Always follow pedestrian signals and local road rules.',
           mascotAlt: 'A friendly orange kangaroo wearing a green scarf'
         }
       };
       let language = 'ja';
       let motionStatus = 'initial';
+      let soundStatus = 'initial';
       try {
         const savedLanguage = localStorage.getItem('safestep_language');
         if (savedLanguage === 'en' || savedLanguage === 'ja') language = savedLanguage;
       } catch (_) { /* Language switching remains available without storage. */ }
 
       const DURATION = 15;
+      const DAILY_RESULTS_KEY = 'safestep_daily_results';
       const LINEAR_ACCELERATION_THRESHOLD = 4.5;
       const GRAVITY_INCLUDED_THRESHOLD = 14;
       const COOLDOWN_MS = 320;
@@ -182,6 +220,22 @@
       let gameActive = false;
       let gameStartedAt = 0;
       let gameEndReason = '';
+      let audioStream = null;
+      let audioContext = null;
+      let audioAnalyser = null;
+      let soundFrameId = null;
+      let shareStatusKey = '';
+      let importStatusKey = '';
+      let playerId = '';
+      try {
+        playerId = localStorage.getItem('safestep_player_id') || '';
+        if (!playerId) {
+          playerId = window.crypto && crypto.randomUUID ? crypto.randomUUID() : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+          localStorage.setItem('safestep_player_id', playerId);
+        }
+        const savedName = localStorage.getItem('safestep_player_name');
+        if (savedName) document.getElementById('player-name').value = savedName;
+      } catch (_) { playerId = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`; }
 
       function updateDynamicText() {
         document.getElementById('motion-note').textContent = translations[language][`motion${motionStatus[0].toUpperCase()}${motionStatus.slice(1)}`];
@@ -189,6 +243,10 @@
         document.getElementById('game-hint').textContent = translations[language][hintKey];
         document.getElementById('countdown-unit').textContent = translations[language].unit;
         if (gameEndReason) document.getElementById('end-reason').textContent = translations[language][gameEndReason];
+        document.getElementById('sound-note').textContent = translations[language][`sound${soundStatus[0].toUpperCase()}${soundStatus.slice(1)}`];
+        if (shareStatusKey) document.getElementById('share-results-status').textContent = translations[language][shareStatusKey];
+        if (importStatusKey) document.getElementById('friend-import-status').textContent = translations[language][importStatusKey];
+        renderDailyBoard();
       }
       function setLanguage(nextLanguage) {
         language = nextLanguage;
@@ -196,6 +254,9 @@
         try { localStorage.setItem('safestep_language', language); } catch (_) { /* Preference is optional. */ }
         document.querySelectorAll('[data-i18n]').forEach(node => {
           node.innerHTML = translations[language][node.dataset.i18n];
+        });
+        document.querySelectorAll('[data-placeholder-i18n]').forEach(node => {
+          node.placeholder = translations[language][node.dataset.placeholderI18n];
         });
         document.querySelectorAll('[data-mascot]').forEach(img => { img.alt = translations[language].mascotAlt; });
         document.querySelectorAll('[data-signal]').forEach(img => {
@@ -213,6 +274,166 @@
 
       function showScreen(target) {
         screens.forEach(screen => screen.classList.toggle('hidden', screen.id !== target));
+      }
+      function localDateKey(date = new Date()) {
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      }
+      function readDailyResults() {
+        try {
+          const value = JSON.parse(localStorage.getItem(DAILY_RESULTS_KEY) || '{}');
+          return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+        } catch (_) { return {}; }
+      }
+      function mergeDailyResults(incoming) {
+        if (!Array.isArray(incoming)) return;
+        const today = localDateKey();
+        const store = readDailyResults();
+        const current = Array.isArray(store[today]) ? store[today] : [];
+        incoming.slice(0, 40).forEach(item => {
+          if (!item || item.date !== today || typeof item.id !== 'string' || typeof item.name !== 'string') return;
+          const steps = Number(item.steps);
+          const stepsPerMinute = Number(item.stepsPerMinute);
+          if (!Number.isFinite(steps) || steps < 0 || steps > 100000 || !Number.isFinite(stepsPerMinute) || stepsPerMinute < 0 || stepsPerMinute > 100000) return;
+          const clean = { id: item.id.slice(0, 80), name: item.name.trim().slice(0, 20) || 'Player', steps: Math.round(steps), stepsPerMinute: Math.round(stepsPerMinute), date: today };
+          const existingIndex = current.findIndex(entry => entry && entry.id === clean.id);
+          if (existingIndex < 0) current.push(clean);
+          else if (clean.stepsPerMinute > (Number(current[existingIndex].stepsPerMinute) || 0)) current[existingIndex] = clean;
+        });
+        store[today] = current.slice(-40);
+        Object.keys(store).filter(date => date !== today).forEach(date => delete store[date]);
+        try { localStorage.setItem(DAILY_RESULTS_KEY, JSON.stringify(store)); } catch (_) { /* Daily sharing is optional when storage is unavailable. */ }
+      }
+      function getTodayResults() {
+        const store = readDailyResults();
+        return (Array.isArray(store[localDateKey()]) ? store[localDateKey()] : []).slice().sort((a, b) => b.stepsPerMinute - a.stepsPerMinute || b.steps - a.steps || a.name.localeCompare(b.name));
+      }
+      function renderDailyBoard() {
+        const entries = getTodayResults();
+        [['daily-board-start-list', 'daily-board-start-empty'], ['daily-board-result-list', 'daily-board-result-empty']].forEach(([listId, emptyId]) => {
+          const list = document.getElementById(listId);
+          const empty = document.getElementById(emptyId);
+          if (!list || !empty) return;
+          list.replaceChildren();
+          empty.classList.toggle('hidden', entries.length > 0);
+          entries.forEach((entry, index) => {
+            const row = document.createElement('li');
+            row.className = 'flex items-center justify-between gap-2 rounded-lg bg-white/65 px-2 py-1.5';
+            const name = document.createElement('span');
+            name.className = 'truncate font-semibold';
+            name.textContent = `${index + 1}. ${entry.name}${entry.id === playerId ? ` (${translations[language].youLabel})` : ''}`;
+            const scoreText = document.createElement('span');
+            scoreText.className = 'shrink-0 tabular-nums text-xs text-[#385b4c]/75';
+            scoreText.textContent = `${entry.steps} ${translations[language].yourScore.toLowerCase()} · ${entry.stepsPerMinute} ${translations[language].perMinute}`;
+            row.append(name, scoreText);
+            list.append(row);
+          });
+        });
+      }
+      function decodeSharedResults() {
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get('results');
+        if (!token) return;
+        try {
+          const shared = parseSharedResults(token);
+          if (!shared) return;
+          mergeDailyResults(shared);
+          params.delete('results');
+          const cleanUrl = `${window.location.pathname}${params.toString() ? `?${params}` : ''}${window.location.hash}`;
+          window.history.replaceState({}, '', cleanUrl);
+        } catch (_) { /* Ignore malformed or expired share links. */ }
+      }
+      function parseSharedResults(token) {
+        if (typeof token !== 'string' || token.length > 50000) return null;
+        const base64 = token.replace(/-/g, '+').replace(/_/g, '/');
+        const padded = base64 + '='.repeat((4 - base64.length % 4) % 4);
+        const bytes = Uint8Array.from(atob(padded), character => character.charCodeAt(0));
+        const shared = JSON.parse(new TextDecoder().decode(bytes));
+        return Array.isArray(shared) && shared.length <= 40 ? shared : null;
+      }
+      function encodeSharedResults(results) {
+        const bytes = new TextEncoder().encode(JSON.stringify(results));
+        let binary = '';
+        bytes.forEach(byte => { binary += String.fromCharCode(byte); });
+        return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+      }
+      async function shareTodayResults() {
+        const shareCode = encodeSharedResults(getTodayResults().slice(0, 20));
+        const field = document.getElementById('share-results-url');
+        field.value = shareCode;
+        field.classList.remove('hidden');
+        const status = document.getElementById('share-results-status');
+        try {
+          await navigator.clipboard.writeText(field.value);
+          shareStatusKey = 'shareLinkCopied';
+        } catch (_) { shareStatusKey = 'shareLinkManual'; }
+        status.textContent = translations[language][shareStatusKey];
+      }
+      function importFriendCode() {
+        const field = document.getElementById('friend-code-input');
+        try {
+          const results = parseSharedResults(field.value.trim());
+          const today = localDateKey();
+          const valid = results && results.some(item => item && item.date === today && typeof item.id === 'string');
+          if (!valid) throw new Error('No results for today');
+          mergeDailyResults(results);
+          importStatusKey = 'importCodeSuccess';
+          field.value = '';
+        } catch (_) { importStatusKey = 'importCodeInvalid'; }
+        document.getElementById('friend-import-status').textContent = translations[language][importStatusKey];
+        renderDailyBoard();
+      }
+      function stopSoundDetection() {
+        if (soundFrameId !== null) cancelAnimationFrame(soundFrameId);
+        soundFrameId = null;
+        audioAnalyser = null;
+        if (audioStream) audioStream.getTracks().forEach(track => track.stop());
+        audioStream = null;
+        if (audioContext) {
+          const context = audioContext;
+          audioContext = null;
+          context.close().catch(() => {});
+        }
+      }
+      async function requestSoundStream() {
+        if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== 'function' || !(window.AudioContext || window.webkitAudioContext)) return null;
+        try {
+          return await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false }, video: false });
+        } catch (_) { return null; }
+      }
+      function monitorSignalSound() {
+        try {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          audioContext = new AudioContextClass();
+          audioAnalyser = audioContext.createAnalyser();
+          audioAnalyser.fftSize = 2048;
+          audioAnalyser.smoothingTimeConstant = 0.12;
+          audioContext.createMediaStreamSource(audioStream).connect(audioAnalyser);
+          const waveform = new Float32Array(audioAnalyser.fftSize);
+          const spectrum = new Float32Array(audioAnalyser.frequencyBinCount);
+          let consecutiveMatches = 0;
+          const detect = () => {
+            if (!gameActive || !audioAnalyser || !audioContext) return;
+            audioAnalyser.getFloatTimeDomainData(waveform);
+            audioAnalyser.getFloatFrequencyData(spectrum);
+            let power = 0;
+            for (let i = 0; i < waveform.length; i += 1) power += waveform[i] * waveform[i];
+            const rms = Math.sqrt(power / waveform.length);
+            let tonePeakDb = -Infinity;
+            const binHz = audioContext.sampleRate / audioAnalyser.fftSize;
+            for (let i = 0; i < spectrum.length; i += 1) {
+              const frequency = i * binHz;
+              if (frequency >= 700 && frequency <= 4000) tonePeakDb = Math.max(tonePeakDb, spectrum[i]);
+            }
+            consecutiveMatches = rms >= 0.055 && tonePeakDb >= -34 ? consecutiveMatches + 1 : 0;
+            if (consecutiveMatches >= 3) { finishGame('sound'); return; }
+            soundFrameId = requestAnimationFrame(detect);
+          };
+          soundFrameId = requestAnimationFrame(detect);
+        } catch (_) {
+          soundStatus = 'unavailable';
+          stopSoundDetection();
+          updateDynamicText();
+        }
       }
       function stopMotion() {
         if (listening) window.removeEventListener('devicemotion', onMotion);
@@ -268,9 +489,18 @@
       async function startGame() {
         startButton.disabled = true;
         motionStatus = 'checking';
+        soundStatus = 'checking';
         updateDynamicText();
-        const permission = await requestMotionPermission();
+        const motionRequest = requestMotionPermission();
+        const soundRequest = requestSoundStream();
+        const [permission, stream] = await Promise.all([motionRequest, soundRequest]);
         motionStatus = permission === 'granted' ? 'active' : 'unavailable';
+        audioStream = stream;
+        soundStatus = stream ? 'active' : 'unavailable';
+        const nameField = document.getElementById('player-name');
+        const displayName = nameField.value.trim().slice(0, 20) || (language === 'ja' ? 'プレイヤー' : 'Player');
+        nameField.value = displayName;
+        try { localStorage.setItem('safestep_player_name', displayName); } catch (_) { /* Name sharing is optional. */ }
         updateDynamicText();
         score = 0;
         seconds = DURATION;
@@ -288,6 +518,7 @@
         gameStartedAt = performance.now();
         gameActive = true;
         updateLiveMetrics(gameStartedAt);
+        if (audioStream) monitorSignalSound();
         timerId = window.setInterval(updateGameClock, 100);
       }
       function updateGameClock() {
@@ -297,7 +528,7 @@
         seconds = Math.max(0, Math.ceil((DURATION * 1000 - elapsed) / 1000));
         timerNode.textContent = String(seconds);
         updateLiveMetrics(now);
-        if (elapsed >= DURATION * 1000) finishGame('timer');
+        if (elapsed >= DURATION * 1000) finishGame('green');
       }
       function finishGame(reason = 'manual') {
         if (!gameActive) return;
@@ -305,9 +536,14 @@
         if (timerId !== null) window.clearInterval(timerId);
         timerId = null;
         stopMotion();
+        stopSoundDetection();
         const elapsedMs = Math.max(1, performance.now() - gameStartedAt);
         const stepsPerMinute = Math.round(score * 60000 / elapsedMs);
-        const currentResult = { steps: score, elapsedMs: Math.round(elapsedMs), stepsPerMinute, endedBy: reason, recordedAt: new Date().toISOString() };
+        const currentResult = {
+          id: playerId, name: document.getElementById('player-name').value.trim().slice(0, 20) || (language === 'ja' ? 'プレイヤー' : 'Player'),
+          date: localDateKey(), steps: score, elapsedMs: Math.round(elapsedMs), stepsPerMinute, endedBy: reason, recordedAt: new Date().toISOString()
+        };
+        mergeDailyResults([currentResult]);
         let bestRate = 0;
         let newRecord = false;
         try {
@@ -332,9 +568,12 @@
         document.getElementById('final-time').textContent = formatDuration(elapsedMs);
         document.getElementById('final-rate').textContent = String(stepsPerMinute);
         document.getElementById('high-rate').textContent = String(bestRate);
-        gameEndReason = reason === 'timer' ? 'endedByTimer' : 'endedManually';
+        gameEndReason = reason === 'green' ? 'endedByGreen' : reason === 'sound' ? 'endedBySound' : 'endedManually';
         document.getElementById('record-status').classList.toggle('hidden', !newRecord);
         updateDynamicText();
+        document.getElementById('share-results-url').classList.add('hidden');
+        shareStatusKey = '';
+        document.getElementById('share-results-status').textContent = '';
         showScreen('result-screen');
       }
       startButton.addEventListener('click', startGame);
@@ -344,12 +583,22 @@
         showScreen('start-screen');
         startButton.disabled = false;
         motionStatus = 'initial';
+        soundStatus = 'initial';
         gameEndReason = '';
         document.getElementById('record-status').classList.add('hidden');
         updateDynamicText();
         startButton.focus();
       });
+      document.getElementById('share-results-button').addEventListener('click', shareTodayResults);
+      document.getElementById('import-friend-code').addEventListener('click', importFriendCode);
+      document.getElementById('player-name').addEventListener('change', event => {
+        const name = event.target.value.trim().slice(0, 20);
+        event.target.value = name;
+        try { localStorage.setItem('safestep_player_name', name); } catch (_) { /* Name sharing is optional. */ }
+      });
       document.getElementById('language-toggle').addEventListener('click', () => setLanguage(language === 'ja' ? 'en' : 'ja'));
+      decodeSharedResults();
+      renderDailyBoard();
       setLanguage(language);
     })();
   </script>
