@@ -19,10 +19,10 @@
     .game-scene .scene-signal { width: 58px; height: 108px; }
     .result-scene .scene-signal { width: 60px; height: 112px; }
     .start-mascot { width: 122px; height: 140px; }
-    .game-scene { height: 124px; margin-top: .5rem; gap: 9px; }
-    .countdown-art { position: relative; display: grid; place-items: center; width: 58px; height: 106px; flex: 0 0 58px; }
-    .countdown-art img { height: 100%; width: 100%; object-fit: cover; object-position: top; filter: drop-shadow(0 5px 8px rgb(25 68 43 / .18)); }
-    .countdown-number { position: absolute; top: 34%; left: 50%; width: 52px; transform: translate(-50%, -50%); text-align: center; }
+    .game-scene { position: relative; isolation: isolate; height: 124px; margin-top: .5rem; gap: 9px; }
+    .countdown-art { position: relative; z-index: 0; display: grid; place-items: center; width: 58px; height: 106px; flex: 0 0 58px; overflow: hidden; pointer-events: none; }
+    .countdown-art img { position: absolute; inset: 0; z-index: 0; height: 100%; width: 100%; object-fit: cover; object-position: top; filter: drop-shadow(0 5px 8px rgb(25 68 43 / .18)); pointer-events: none; }
+    .countdown-number { position: absolute; z-index: 1; top: 34%; left: 50%; width: 52px; transform: translate(-50%, -50%); text-align: center; pointer-events: none; }
     .countdown-number p:first-child { color: #fff9e8; font-size: clamp(1.2rem, 6vw, 1.55rem); font-weight: 900; line-height: 1; text-shadow: 0 2px 8px #831f1d, 0 0 3px #581c1c; }
     .countdown-number p:last-child { color: #ffedb6; font-size: .48rem; font-weight: 800; letter-spacing: .03em; text-shadow: 0 1px 5px #581c1c; }
     .result-scene { height: 138px; margin-top: .25rem; }
@@ -37,7 +37,7 @@
     .mascot-hop { animation: hop 420ms ease-out; }
     @keyframes hop { 45% { transform: translateY(-20px) rotate(-3deg) scale(1.04); } 75% { transform: translateY(1px); } }
     .mascot-image { display: block; width: 132px; height: 156px; object-fit: contain; filter: drop-shadow(0 10px 16px rgb(25 68 43 / .18)); }
-    .game-mascot { width: 96px; height: 118px; }
+    .game-mascot { width: 120px; height: 118px; flex: 0 0 120px; }
     .game-mascot.jump-pose { width: 120px; height: 118px; }
     .result-mascot { width: 112px; height: 128px; }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; } }
