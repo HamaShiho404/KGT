@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ja">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -194,11 +194,11 @@
           mascotAlt: 'A friendly orange kangaroo wearing a green scarf'
         }
       };
-      let language = 'ja';
+      let language = 'en';
       let motionStatus = 'initial';
       let soundStatus = 'initial';
       try {
-        const savedLanguage = localStorage.getItem('safestep_language');
+        const savedLanguage = localStorage.getItem('safestep_language_choice');
         if (savedLanguage === 'en' || savedLanguage === 'ja') language = savedLanguage;
       } catch (_) { /* Language switching remains available without storage. */ }
 
@@ -251,7 +251,6 @@
       function setLanguage(nextLanguage) {
         language = nextLanguage;
         document.documentElement.lang = language;
-        try { localStorage.setItem('safestep_language', language); } catch (_) { /* Preference is optional. */ }
         document.querySelectorAll('[data-i18n]').forEach(node => {
           node.innerHTML = translations[language][node.dataset.i18n];
         });
@@ -596,7 +595,11 @@
         event.target.value = name;
         try { localStorage.setItem('safestep_player_name', name); } catch (_) { /* Name sharing is optional. */ }
       });
-      document.getElementById('language-toggle').addEventListener('click', () => setLanguage(language === 'ja' ? 'en' : 'ja'));
+      document.getElementById('language-toggle').addEventListener('click', () => {
+        language = language === 'ja' ? 'en' : 'ja';
+        setLanguage(language);
+        try { localStorage.setItem('safestep_language_choice', language); } catch (_) { /* Preference is optional. */ }
+      });
       decodeSharedResults();
       renderDailyBoard();
       setLanguage(language);
