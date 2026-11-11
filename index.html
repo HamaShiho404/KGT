@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#eff7eb">
-  <meta name="description" content="A short, safety-first movement mini-game for waiting at pedestrian signals in Adelaide.">
-  <title>Adelaide SafeStep Beat</title>
+  <meta name="description" content="Kangaroo Steps is a short, safety-first movement mini-game for waiting at pedestrian signals.">
+  <title>Kangaroo Steps</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root { color-scheme: light; }
@@ -38,17 +38,17 @@
 </head>
 <body class="text-[#183f34] antialiased">
   <main class="safe-pad mx-auto flex min-h-[100svh] w-full max-w-xl flex-col justify-center px-5 py-8 sm:px-8">
-    <header class="mb-7 flex items-center justify-between gap-3" aria-label="Adelaide SafeStep Beat">
+    <header class="mb-7 flex items-center justify-between gap-3" aria-label="Kangaroo Steps">
       <div class="flex min-w-0 items-center gap-3">
         <span class="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-[#78927e]/25 bg-[#edf5eb] text-xl" aria-hidden="true">🚦</span>
-        <span class="whitespace-nowrap text-[9px] font-bold tracking-[.1em] text-[#32734f] sm:text-sm sm:tracking-[.16em]">ADELAIDE <span class="text-[#385b4c]/55">/</span> SAFESTEP BEAT</span>
+        <span class="whitespace-nowrap text-[9px] font-bold tracking-[.1em] text-[#32734f] sm:text-sm sm:tracking-[.16em]">KANGAROO <span class="text-[#385b4c]/55">/</span> STEPS</span>
       </div>
       <button id="language-toggle" class="min-h-10 shrink-0 rounded-xl border border-[#78927e]/30 bg-[#fbfff7]/85 px-3 py-2 text-xs font-extrabold text-[#32734f] shadow-sm transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#648573]/30" type="button" aria-label="Switch language">English</button>
     </header>
 
     <section id="start-screen" class="rounded-[2rem] border border-[#78927e]/25 bg-[#fbfff7]/92 p-6 shadow-2xl backdrop-blur sm:p-9">
       <p data-i18n="startKicker" class="mb-3 text-center text-xs font-bold uppercase tracking-[.22em] text-[#47835d]">A little movement while you wait</p>
-      <h1 class="text-center text-4xl font-black leading-tight tracking-tight sm:text-5xl">Adelaide<br><span class="text-[#47835d]">SafeStep Beat</span></h1>
+      <h1 class="text-center text-4xl font-black leading-tight tracking-tight sm:text-5xl">Kangaroo<br><span class="text-[#47835d]">Steps</span></h1>
       <div class="start-scene" data-aria-i18n="waitingSceneLabel" aria-label="Kangaroo waiting at a pedestrian signal">
         <img class="scene-signal" src="assets/countdown-signal.png" data-signal="waiting" alt="Pedestrian signal with red on and green off">
         <img class="mascot-image start-mascot" data-mascot src="assets/kangaroo.png" alt="A friendly orange kangaroo wearing a green scarf">
