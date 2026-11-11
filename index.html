@@ -25,6 +25,11 @@
     .countdown-number p:first-child { color: #fff9e8; font-size: clamp(1.2rem, 6vw, 1.55rem); font-weight: 900; line-height: 1; text-shadow: 0 2px 8px #831f1d, 0 0 3px #581c1c; }
     .countdown-number p:last-child { color: #ffedb6; font-size: .48rem; font-weight: 800; letter-spacing: .03em; text-shadow: 0 1px 5px #581c1c; }
     .result-scene { height: 138px; margin-top: .25rem; }
+    .result-signal { position: relative; flex: 0 0 60px; }
+    .result-signal img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+    .result-signal .green-lamp-layer { clip-path: circle(18px at 50% 77%); }
+    .result-signal .green-lamp-blink { animation: green-lamp-blink 1s steps(1, end) infinite; }
+    @keyframes green-lamp-blink { 0%, 49.9% { opacity: 1; } 50%, 100% { opacity: 0; } }
     .live-stat { border: 1px solid rgb(120 146 126 / .2); background: rgb(237 245 235 / .8); border-radius: .9rem; padding: .55rem .7rem; }
     .pulse { animation: pulse 550ms ease-out; }
     @keyframes pulse { 50% { transform: scale(1.06); background-color: #d5ecd0; } }
@@ -100,7 +105,11 @@
 
     <section id="result-screen" class="hidden rounded-[2rem] border border-emerald-200/20 bg-[#fbfff7]/94 p-6 text-center shadow-2xl backdrop-blur sm:p-9" aria-live="polite">
       <div class="result-scene" data-aria-i18n="resultSceneLabel" aria-label="Kangaroo beside a green pedestrian signal">
-        <img class="scene-signal" src="assets/countdown-signal-green.png" data-signal="finished" alt="Pedestrian signal with green on and red off">
+        <div class="scene-signal result-signal" role="img" data-aria-i18n="resultSignalBlinkAlt" aria-label="Pedestrian signal with blinking green and red off">
+          <img src="assets/countdown-signal-green.png" data-signal="finished" alt="Pedestrian signal with green on and red off">
+          <img class="green-lamp-layer" src="assets/countdown-signal.png" alt="" aria-hidden="true">
+          <img class="green-lamp-layer green-lamp-blink" src="assets/countdown-signal-green.png" alt="" aria-hidden="true">
+        </div>
         <img class="mascot-image result-mascot" data-mascot src="assets/kangaroo.png" alt="Your kangaroo buddy celebrates with you">
       </div>
       <p data-i18n="resultKicker" class="mt-6 text-xs font-bold uppercase tracking-[.22em] text-[#47835d]">Your wait is over</p>
@@ -133,7 +142,7 @@
       const translations = {
         ja: {
           switchLanguage: 'English', switchLabel: '言語を英語に切り替え', countdownLabel: '歩行者信号に重ねたカウントダウン',
-          waitingSignalAlt: '赤信号点灯、青信号消灯の歩行者用信号', waitingSceneLabel: '歩行者信号の前で待つカンガルー', gameSceneLabel: 'カウントダウン信号の横で待つカンガルー', resultSceneLabel: '青信号の横にいるカンガルー',
+          waitingSignalAlt: '赤信号点灯、青信号消灯の歩行者用信号', waitingSceneLabel: '歩行者信号の前で待つカンガルー', gameSceneLabel: 'カウントダウン信号の横で待つカンガルー', resultSceneLabel: '青信号の横にいるカンガルー', resultSignalBlinkAlt: '青信号が点滅し、赤信号は消灯した歩行者信号',
           startKicker: '待ち時間に、ちょっと運動',
           startDescription: 'スタートしたら、その場で小さくジャンプ／ステップ。カンガルーも一緒に跳ねるよ！',
           safetyTitle: '⚠ 周囲から目を離さないでください。',
@@ -164,7 +173,7 @@
         },
         en: {
           switchLanguage: '日本語', switchLabel: 'Switch language to Japanese', countdownLabel: 'Countdown displayed on the pedestrian signal',
-          waitingSignalAlt: 'Pedestrian signal with red on and green off', waitingSceneLabel: 'Kangaroo waiting at a pedestrian signal', gameSceneLabel: 'Kangaroo beside the countdown signal', resultSceneLabel: 'Kangaroo beside the green pedestrian signal',
+          waitingSignalAlt: 'Pedestrian signal with red on and green off', waitingSceneLabel: 'Kangaroo waiting at a pedestrian signal', gameSceneLabel: 'Kangaroo beside the countdown signal', resultSceneLabel: 'Kangaroo beside the green pedestrian signal', resultSignalBlinkAlt: 'Pedestrian signal with blinking green and red off',
           startKicker: 'A little movement while you wait',
           startDescription: 'Tap start, then do a small jump or step in place. Your kangaroo hops with you!',
           safetyTitle: '⚠ Keep your eyes on your surroundings.',
