@@ -37,7 +37,7 @@
     .mascot-hop { animation: hop 420ms ease-out; }
     @keyframes hop { 45% { transform: translateY(-20px) rotate(-3deg) scale(1.04); } 75% { transform: translateY(1px); } }
     .mascot-image { display: block; width: 132px; height: 156px; object-fit: contain; filter: drop-shadow(0 10px 16px rgb(25 68 43 / .18)); }
-    .game-mascot { width: 120px; height: 118px; flex: 0 0 120px; }
+    .game-mascot { position: relative; z-index: 2; width: 120px; height: 118px; flex: 0 0 120px; }
     .game-mascot.jump-pose { width: 120px; height: 118px; }
     .result-mascot { width: 112px; height: 128px; }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; } }
