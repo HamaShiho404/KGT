@@ -467,7 +467,7 @@
         score += 1;
         scoreNode.textContent = String(score);
         jumpSound.currentTime = 0;
-        jumpSound.volume = 0.6;
+        jumpSound.volume = 1.0;
         jumpSound.play().catch(() => {});
         gameMascot.src = 'assets/kangaroo-jump.png';
         gameMascot.classList.remove('mascot-hop');
