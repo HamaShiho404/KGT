@@ -28,6 +28,7 @@
     .result-scene { height: 138px; margin-top: .25rem; }
     .result-signal { position: relative; flex: 0 0 60px; }
     .result-signal img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+    .result-signal::after { content: ""; position: absolute; z-index: 1; top: 77%; left: 50%; width: 34px; height: 34px; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle, rgb(226 255 224 / .72) 0%, rgb(99 255 145 / .48) 48%, rgb(54 224 112 / .16) 72%, transparent 100%); mix-blend-mode: screen; pointer-events: none; }
     .live-stat { border: 1px solid rgb(120 146 126 / .2); background: rgb(237 245 235 / .8); border-radius: .9rem; padding: .55rem .7rem; }
     .pulse { animation: pulse 550ms ease-out; }
     @keyframes pulse { 50% { transform: scale(1.06); background-color: #d5ecd0; } }
@@ -131,6 +132,8 @@
       <button id="again-button" data-i18n="againButton" class="mt-7 min-h-14 w-full rounded-2xl bg-[#91c99b] px-6 py-4 text-base font-black tracking-[.12em] text-[#183f34] shadow-lg shadow-emerald-950/30 transition hover:bg-[#a7d7a9] focus:outline-none focus:ring-4 focus:ring-[#91c99b]/45">PLAY AGAIN</button>
       <p data-i18n="highScoreNote" class="mt-4 text-xs text-[#385b4c]/55">Your high score is saved on this device only.</p>
     </section>
+
+    <audio id="jump-sound" src="assets/kangaroo-jump-sfx.mp3" preload="auto" hidden></audio>
     <footer data-i18n="footer" class="mt-6 text-center text-[11px] leading-5 text-[#385b4c]/50">A demo mini-game. It does not detect real traffic signals.<br>Always follow pedestrian signals and local road rules.</footer>
   </main>
 
@@ -219,6 +222,7 @@
       const timerNode = document.getElementById('timer');
       const scoreCard = document.getElementById('score-card');
       const gameMascot = document.getElementById('game-mascot');
+      const jumpSound = document.getElementById('jump-sound');
       let score = 0;
       let seconds = DURATION;
       let timerId = null;
@@ -462,6 +466,9 @@
         if (!gameActive) return;
         score += 1;
         scoreNode.textContent = String(score);
+        jumpSound.currentTime = 0;
+        jumpSound.volume = 0.42;
+        jumpSound.play().catch(() => {});
         gameMascot.src = 'assets/kangaroo-jump.png';
         gameMascot.classList.remove('mascot-hop');
         void gameMascot.offsetWidth;
